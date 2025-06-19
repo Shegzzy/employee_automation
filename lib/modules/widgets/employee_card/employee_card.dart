@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_assessment/common/sizes.dart';
 
 class EmployeeCard extends StatelessWidget {
   final Widget child;
@@ -9,19 +10,19 @@ class EmployeeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-          top: 8),
+      margin: const EdgeInsets.only(
+          top: EmSizes.sm),
       decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withValues(alpha: 0.2),
               spreadRadius: 0,
               blurRadius: 7,
               offset: const Offset(0, 3), // Adjust the offset
             ),
           ],
           borderRadius: BorderRadius.circular(
-              Dimensions.radius8 - 4),
+              EmSizes.borderRadiusSm),
           color: Colors.white
       ),
       child: child,
