@@ -1,7 +1,7 @@
 class Api{
   Api._();
 
-  static Map<String, dynamic> errorRexponse = {
+  static Map<String, dynamic> errorResponse = {
     "statusCode": 400,
     "message": "An error occurred",
     "errors": [

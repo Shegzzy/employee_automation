@@ -17,7 +17,7 @@ class LocalDatabaseService {
 
   Future<Database> _initDB() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'employees.db');
+    final path = join(dbPath, 'xzy_employees.db');
 
     return openDatabase(
       path,
@@ -29,11 +29,9 @@ class LocalDatabaseService {
   Future<void> createTable(String tableName, Map<String, dynamic> json) async {
     final db = await database;
 
-    // Generate Columns based on JSON Keys
     List<String> columns = json.keys.map((key) => "$key TEXT").toList();
     String columnString = columns.join(", ");
 
-    // Create Table Query
     String query = "CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY, $columnString)";
     await db.execute(query);
   }
