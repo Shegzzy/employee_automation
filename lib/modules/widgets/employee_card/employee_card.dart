@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ShadowContainer extends StatelessWidget {
+class EmployeeCard extends StatelessWidget {
   final Widget child;
-  const ShadowContainer({
+  const EmployeeCard({
     super.key, required this.child,
   });
 
@@ -10,7 +10,7 @@ class ShadowContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-          top: Dimensions.height8),
+          top: 8),
       decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
