@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_assessment/service/api_services/api_services.dart';
 import 'package:mobile_assessment/service/local_db_service/local_db_helper.dart';
-import '../../common/io/data.dart';
 import '../../models/employee_model.dart';
 
 class EmployeeProvider extends ChangeNotifier {
-  final Api _apiService = Api();
+  final ApiService _apiService = ApiService();
   final LocalDatabaseService _dbService = LocalDatabaseService();
 
   List<Employee> _employees = [];
@@ -16,25 +16,24 @@ class EmployeeProvider extends ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  // Initial load (from DB or API)
-  Future<void> loadEmployees({bool fromApi = true, bool simulateError = false}) async {
+  Future<void> loadEmployees({bool simulateError = false}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      List<Employee> fetched;
+      List<Employee> fetched = [];
+      await _dbService.createTable('employees', Employee.sampleJson());
 
-      if (fromApi) {
+      fetched = await _dbService.getEmployees();
+
+      if (fetched.isEmpty) {
         if (simulateError) {
           fetched = await _apiService.errorResponse();
         } else {
           fetched = await _apiService.successResponse();
-          await _dbService.clearEmployees();
           await _dbService.insertAllEmployees(fetched);
         }
-      } else {
-        fetched = await _dbService.getEmployees();
       }
 
       _employees = fetched;
@@ -60,4 +59,17 @@ class EmployeeProvider extends ChangeNotifier {
     _employees = await _dbService.getEmployees();
     notifyListeners();
   }
+
+  Future<void> forceRefresh() async {
+    try {
+      final fetched = await _apiService.successResponse();
+      await _dbService.insertAllEmployees(fetched);
+      _employees = fetched;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
 }

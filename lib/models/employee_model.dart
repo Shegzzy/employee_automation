@@ -4,7 +4,7 @@ class Employee {
   final String lastName;
   final String designation;
   final String currentSalary;
-  final String status;
+  final int status;
   final int level;
   final double productivityScore;
 
@@ -36,30 +36,19 @@ class Employee {
     'last_name': lastName,
     'designation': designation,
     'level': level,
-    'score': productivityScore,
+    'employment_status': status,
     'current_salary': currentSalary,
     'productivity_score': productivityScore,
   };
 
-  Map<String, dynamic> toMap() => {
-    'id': id,
-    'first_name': firstName,
-    'last_name': lastName,
-    'designation': designation,
-    'level': level,
-    'score': productivityScore,
-    'current_salary': currentSalary,
-    'productivity_score': productivityScore,
+  static Map<String, dynamic> sampleJson() => {
+    "first_name": "",
+    "last_name": "",
+    "designation": "",
+    "level": 0,
+    "productivity_score": 0.0,
+    "current_salary": "",
+    "employment_status": 1,
   };
 
-  factory Employee.fromMap(Map<String, dynamic> map) => Employee(
-    id: map['id'],
-    firstName: map['first_name'],
-    lastName: map['last_name'],
-    designation: map['designation'],
-    level: map['level'],
-    productivityScore: map['productivity_score'],
-    status: map['employment_status'],
-    currentSalary: map['current_salary'],
-  );
 }

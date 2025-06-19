@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_assessment/modules/home/presentation/home_screen.dart';
+import 'package:mobile_assessment/service/providers/employees_provider.dart';
+import 'package:provider/provider.dart';
 
 class MobileAssessmentApp extends StatefulWidget {
   final bool isDebug;
@@ -12,9 +14,12 @@ class MobileAssessmentApp extends StatefulWidget {
 class _MobileAssessmentAppState extends State<MobileAssessmentApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: widget.isDebug,
-      home: const HomeScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => EmployeeProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: widget.isDebug,
+        home: const HomeScreen(),
+      ),
     );
   }
 }

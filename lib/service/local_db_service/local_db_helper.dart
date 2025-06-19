@@ -19,7 +19,7 @@ class LocalDatabaseService {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'xzy_employees.db');
 
-    return openDatabase(
+    return await openDatabase(
       path,
       version: 1,
       onCreate: (db, version){},
@@ -27,35 +27,54 @@ class LocalDatabaseService {
   }
 
   Future<void> createTable(String tableName, Map<String, dynamic> json) async {
-    final db = await database;
+    try {
+      final db = await database;
 
-    List<String> columns = json.keys.map((key) => "$key TEXT").toList();
-    String columnString = columns.join(", ");
+      List<String> columns = json.entries.map((entry) {
+        final key = entry.key;
+        final value = entry.value;
+        if (key == 'id') return null;
+        final type = value is int
+            ? 'INTEGER'
+            : value is double
+            ? 'REAL'
+            : 'TEXT';
+        return "$key $type";
+      }).whereType<String>().toList();
+      String columnString = columns.join(", ");
 
-    String query = "CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY, $columnString)";
-    await db.execute(query);
+      String query = "CREATE TABLE IF NOT EXISTS $tableName (id INTEGER PRIMARY KEY, $columnString)";
+      await db.execute(query);
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> insertEmployee(Employee employee) async {
     final db = await database;
     await db.insert(
       'employees',
-      employee.toMap(),
+      employee.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
   Future<List<Employee>> getEmployees() async {
-    final db = await database;
-    final result = await db.query('employees');
-    return result.map((e) => Employee.fromMap(e)).toList();
+    try {
+      final db = await database;
+      final result = await db.query('employees');
+      return result.map((e) => Employee.fromJson(e)).toList();
+    } catch (e) {
+      print('Fetch Error: $e');
+      return [];
+    }
   }
 
   Future<void> insertAllEmployees(List<Employee> employees) async {
     final db = await database;
     final batch = db.batch();
     for (var emp in employees) {
-      batch.insert('employees', emp.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+      batch.insert('employees', emp.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     await batch.commit(noResult: true);
   }
@@ -63,5 +82,10 @@ class LocalDatabaseService {
   Future<void> clearEmployees() async {
     final db = await database;
     await db.delete('employees');
+  }
+
+  Future<void> dropTable(String tableName) async {
+    final db = await database;
+    await db.execute("DROP TABLE IF EXISTS $tableName");
   }
 }
