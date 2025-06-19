@@ -10,8 +10,7 @@ class EmployeeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(
-          top: EmSizes.sm),
+      margin: const EdgeInsets.only(top: EmSizes.sm),
       decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(

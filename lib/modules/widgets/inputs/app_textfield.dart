@@ -9,7 +9,6 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextInputType? keyboardType;
-  final Function(String?)? onSaved;
   final String Function(String?)? validator;
   final Function(String?)? onChanged;
   final String? initialValue;
@@ -30,7 +29,6 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false,
     this.maxLines,
     this.maxLength,
-    this.onSaved,
     this.validator,
     this.onChanged,
     this.initialValue,
@@ -50,7 +48,6 @@ class CustomTextField extends StatelessWidget {
               enabled: !isDisabled,
               obscureText: isPassword,
               validator: validator,
-              onSaved: onSaved!,
               onChanged: onChanged,
               style: const TextStyle(color: Colors.black, fontSize: 14),
               cursorColor: Theme.of(context).highlightColor,
@@ -77,7 +74,6 @@ class CustomTextField extends StatelessWidget {
               enabled: !isDisabled,
               obscureText: isPassword,
               validator: validator,
-              onSaved: onSaved,
               onChanged: onChanged,
               style: const TextStyle(color: Colors.black, fontSize: 14),
               cursorColor: Theme.of(context).primaryColor,
