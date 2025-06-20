@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/colors.dart';
+import '../../../common/sizes.dart';
+
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final String labelText;
   final Widget? suffix;
+  final Widget? prefix;
   final bool isPassword;
   final Key? textFieldKey;
   final int? maxLines;
@@ -24,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     required this.labelText,
     this.suffixIcon,
     this.suffix,
+    this.prefix,
     this.keyboardType,
     this.controller,
     this.isPassword = false,
@@ -40,8 +45,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: controller != null
-          ? TextFormField(
+      child: TextFormField(
               key: textFieldKey,
               autovalidateMode: AutovalidateMode.always,
               controller: controller,
@@ -49,53 +53,40 @@ class CustomTextField extends StatelessWidget {
               obscureText: isPassword,
               validator: validator,
               onChanged: onChanged,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
-              cursorColor: Theme.of(context).highlightColor,
+              cursorColor: AppColors.hintTextColor,
               maxLines: isPassword ? 1 : maxLines,
               maxLength: maxLength,
               keyboardType: keyboardType,
               readOnly: readOnly,
+              style: const TextStyle(
+                fontSize: EmSizes.fontSizeSm,
+                fontWeight: FontWeight.w400,
+                color: AppColors.blackColor),
               decoration: InputDecoration(
-                labelText: labelText,
-                suffix: suffix,
-                suffixIcon: suffixIcon,
-                disabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor)),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor)),
+                prefixIcon: prefix,
+                suffixIcon: suffix,
+                hintText: hintText,
+                hintStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.hintTextColor),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: AppColors.blackColor.withValues(alpha: 0.3))),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: AppColors.blackColor.withValues(alpha: 0.3))),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: AppColors.blackColor.withValues(alpha: 0.3))),
+                // fillColor: fillColor,
+                filled: true,
               ),
+              textInputAction: TextInputAction.search,
             )
-          : TextFormField(
-              key: textFieldKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              initialValue: initialValue ?? '',
-              enabled: !isDisabled,
-              obscureText: isPassword,
-              validator: validator,
-              onChanged: onChanged,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
-              cursorColor: Theme.of(context).primaryColor,
-              maxLines: isPassword ? 1 : maxLines,
-              maxLength: maxLength,
-              keyboardType: keyboardType ?? TextInputType.text,
-              readOnly: readOnly,
-              decoration: InputDecoration(
-                labelText: labelText,
-                floatingLabelStyle:
-                    TextStyle(color: Theme.of(context).primaryColor),
-                suffix: suffix,
-                suffixIcon: suffixIcon,
-                focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor)),
-                disabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-              ),
-            ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_assessment/common/colors.dart';
 import 'package:mobile_assessment/common/sizes.dart';
 import 'package:mobile_assessment/modules/details/presentation/details_screen.dart';
 import 'package:mobile_assessment/modules/widgets/employee_card/employee_card.dart';
@@ -36,7 +37,25 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: EmSizes.lg),
             child: Column(
               children: [
-                CustomTextField(hintText: 'eg: name, designation, level', labelText: '', controller: _searchController,),
+                CustomTextField(
+                  hintText: 'eg: name, designation, level',
+                  labelText: '', 
+                  controller: _searchController,
+                  suffix: _searchController.text.isEmpty ?
+                    const Icon(Icons.search, color: AppColors.greyColor,)
+                      : InkWell(
+                        onTap: () {
+                          _searchController.text = '';
+                          emProvider.resetFilter();
+                        },
+                        child: const Icon(Icons.clear, color: AppColors.blackColor,),
+                  ),
+                  onChanged: (value) {
+                    value?.isNotEmpty == true ?
+                      emProvider.filterEmployees(value!) : emProvider.resetFilter();
+
+                  },
+                ),
 
                 employeesCard(emProvider),
               ],
