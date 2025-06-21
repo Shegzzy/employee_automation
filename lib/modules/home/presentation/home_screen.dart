@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_assessment/common/colors.dart';
 import 'package:mobile_assessment/common/sizes.dart';
 import 'package:mobile_assessment/modules/details/presentation/details_screen.dart';
@@ -123,12 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
             subtitle: Text('${employee.designation} - Level: ${employee.level}'),
             trailing: Text('${employee.productivityScore}%'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => DetailsScreen(employee: employee),
-                ),
-              );
+              context.push('/details', extra: employee);
             },
           )
         );

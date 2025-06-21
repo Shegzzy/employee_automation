@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_assessment/modules/home/presentation/home_screen.dart';
 import 'package:mobile_assessment/service/providers/employees_provider.dart';
+import 'package:mobile_assessment/utils/navigation.dart';
 import 'package:provider/provider.dart';
 
 class MobileAssessmentApp extends StatefulWidget {
@@ -21,9 +22,9 @@ class _MobileAssessmentAppState extends State<MobileAssessmentApp> {
       builder: (context) {
         return ChangeNotifierProvider(
           create: (_) => EmployeeProvider(),
-          child: MaterialApp(
+          child: MaterialApp.router(
+            routerConfig: AppRouter.router,
             debugShowCheckedModeBanner: widget.isDebug,
-            home: const HomeScreen(),
           ),
         );
       }
