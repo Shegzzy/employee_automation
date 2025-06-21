@@ -57,7 +57,53 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
 
-                employeesCard(emProvider),
+                // Error
+                if (emProvider.error != null)
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error, color: Colors.red, size: 48),
+                          const SizedBox(height: 16),
+                          Text(
+                            emProvider.error!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.red, fontSize: 16),
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.refresh),
+                            label: const Text("Try Again"),
+                            onPressed: () {
+                              emProvider.loadEmployees(simulateError: false);
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
+                // Loading
+                if (emProvider.isLoading)
+                  const Expanded(child: Center(child: CircularProgressIndicator())),
+
+                // Employees
+                if (!emProvider.isLoading && emProvider.employees.isNotEmpty)
+                  employeesCard(emProvider),
+
+                if(emProvider.error == null)
+                  ElevatedButton.icon(
+                  icon: const Icon(Icons.warning),
+                  label: const Text('Simulate Error'),
+                  onPressed: () {
+                    emProvider.loadEmployees(simulateError: true);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
               ],
             ),
           );

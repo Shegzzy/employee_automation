@@ -27,6 +27,10 @@ class EmployeeProvider extends ChangeNotifier {
 
       fetched = await _dbService.getEmployees();
 
+      if (simulateError) {
+        fetched = [];
+      }
+
       if (fetched.isEmpty) {
         if (simulateError) {
           fetched = await _apiService.errorResponse();
@@ -39,6 +43,8 @@ class EmployeeProvider extends ChangeNotifier {
       _employees = fetched;
     } catch (e) {
       _error = e.toString();
+      _employees = [];
+      print(_error);
     } finally {
       _isLoading = false;
       notifyListeners();
