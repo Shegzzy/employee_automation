@@ -5,7 +5,7 @@ import '../../../common/sizes.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  final String labelText;
+  final String? labelText;
   final Widget? suffix;
   final Widget? prefix;
   final bool isPassword;
@@ -25,7 +25,7 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     this.textFieldKey,
     required this.hintText,
-    required this.labelText,
+    this.labelText,
     this.suffixIcon,
     this.suffix,
     this.prefix,
@@ -61,29 +61,31 @@ class CustomTextField extends StatelessWidget {
               style: const TextStyle(
                 fontSize: EmSizes.fontSizeSm,
                 fontWeight: FontWeight.w400,
-                color: AppColors.blackColor),
+                color: AppColors.blackColor,
+              ),
               decoration: InputDecoration(
                 prefixIcon: prefix,
                 suffixIcon: suffix,
                 hintText: hintText,
+                labelText: labelText,
                 hintStyle: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.hintTextColor),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(EmSizes.borderRadiusLg),
                     borderSide: BorderSide(
                         color: AppColors.blackColor.withValues(alpha: 0.3))),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(EmSizes.borderRadiusLg),
                     borderSide: BorderSide(
                         color: AppColors.blackColor.withValues(alpha: 0.3))),
                 focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(EmSizes.borderRadiusLg),
                     borderSide: BorderSide(
                         color: AppColors.blackColor.withValues(alpha: 0.3))),
                 // fillColor: fillColor,
-                filled: true,
+                // filled: true,
               ),
               textInputAction: TextInputAction.search,
             )

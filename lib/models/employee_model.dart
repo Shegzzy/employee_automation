@@ -51,4 +51,25 @@ class Employee {
     "employment_status": 1,
   };
 
+  Employee copyWith({
+    int? id,
+    String? firstName,
+    String? lastName,
+    String? designation,
+    int? level,
+    double? productivityScore,
+    String? currentSalary,
+    int? employmentStatus,
+  }) {
+    return Employee(
+      id: id ?? this.id,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      designation: designation ?? this.designation,
+      level: level ?? this.level,
+      productivityScore: productivityScore ?? this.productivityScore,
+      currentSalary: currentSalary ?? this.currentSalary,
+      status: employmentStatus ?? status,
+    );
+  }
 }

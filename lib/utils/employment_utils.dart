@@ -1,15 +1,15 @@
 class EmploymentUtils {
   static String getStatus(double score, int level) {
-    if (score >= 80) return "Promoted";
+    if (score >= 80) return "A promotion and consequential pay increase";
     if (score >= 50) return "No Change";
-    if (score >= 40) return level == 0 ? "No Change" : "Demoted";
-    return "Terminated";
+    if (score >= 40) return level == 0 ? "No Change" : "A Demotion";
+    return "Termination";
   }
 
   static String getNewSalary(int level, double score) {
     String salary;
 
-    if (score < 40) return "₦0"; // Terminated
+    if (score < 40) return "₦0";
 
     int newLevel = level;
 
@@ -19,7 +19,6 @@ class EmploymentUtils {
       newLevel = level - 1;
     }
 
-    // Cap levels (optional)
     if (newLevel > 5) newLevel = 5;
 
     switch (newLevel) {

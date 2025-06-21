@@ -38,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 CustomTextField(
+                  key: const Key('Employee_search'),
                   hintText: 'eg: name, designation, level',
-                  labelText: '', 
                   controller: _searchController,
                   suffix: _searchController.text.isEmpty ?
                     const Icon(Icons.search, color: AppColors.greyColor,)

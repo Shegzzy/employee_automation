@@ -24,7 +24,7 @@ of every year, employees are given a productivity score which affects their stat
 
 You have been assigned to build mobile system that primarily handles this for the people at XYZ inc. They do, however have a few secondary requirements which are:
 
-- The list of employees can be retrieved from Api.successResponse and should be displayed on the home screen as wll as saved in a local database
+- The list of employees can be retrieved from Api.successResponse and should be displayed on the home screen as well as saved in a local database
 - The employees can be filtered by name, designation or level
 - When an employee is tapped, their employee details where their employment status and new salary can be determined
   - Level 0 = 70,000

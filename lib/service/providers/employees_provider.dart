@@ -60,16 +60,20 @@ class EmployeeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> forceRefresh() async {
+  Future<void> refresh() async {
     try {
-      final fetched = await _apiService.successResponse();
-      await _dbService.insertAllEmployees(fetched);
+      final fetched = await _dbService.getEmployees();
       _employees = fetched;
       notifyListeners();
     } catch (e) {
       _error = e.toString();
       notifyListeners();
     }
+  }
+
+  Future<void> saveChanges(Employee employee) async {
+    await _dbService.insertEmployee(employee);
+    await refresh();
   }
 
 }
