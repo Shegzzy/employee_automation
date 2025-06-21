@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_assessment/modules/home/presentation/home_screen.dart';
 import 'package:mobile_assessment/service/providers/employees_provider.dart';
@@ -14,12 +16,17 @@ class MobileAssessmentApp extends StatefulWidget {
 class _MobileAssessmentAppState extends State<MobileAssessmentApp> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => EmployeeProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: widget.isDebug,
-        home: const HomeScreen(),
-      ),
+    return DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) {
+        return ChangeNotifierProvider(
+          create: (_) => EmployeeProvider(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: widget.isDebug,
+            home: const HomeScreen(),
+          ),
+        );
+      }
     );
   }
 }

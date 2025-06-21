@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_assessment/common/colors.dart';
 import 'package:mobile_assessment/common/sizes.dart';
 import 'package:mobile_assessment/models/employee_model.dart';
 import 'package:mobile_assessment/modules/widgets/inputs/app_textfield.dart';
@@ -18,29 +19,40 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   late TextEditingController _scoreController;
+  late TextEditingController _salaryController;
   late int _level;
   bool _isEditing = false;
   late String newSalary;
+  late String status;
+  late Employee _employee;
+  final _formKey = GlobalKey<FormState>();
 
 
   @override
   void initState() {
     super.initState();
-    _scoreController = TextEditingController(text: widget.employee.productivityScore.toString());
-    _level = widget.employee.level;
-    newSalary = EmploymentUtils.getNewSalary(_level, widget.employee.productivityScore);
+    _employee = widget.employee;
+    setValues();
+  }
+
+  setValues() {
+    _scoreController = TextEditingController(text: _employee.productivityScore.toString());
+    _level = _employee.level;
+    newSalary = EmploymentUtils.getNewSalary(_level, _employee.productivityScore);
+    status =  EmploymentUtils.getStatus(_employee.productivityScore, _level);
+    _salaryController = TextEditingController(text: _employee.currentSalary.replaceAll(',', ''));
   }
 
   @override
   void dispose() {
     _scoreController.dispose();
+    _salaryController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final emp = widget.employee;
-    final status = EmploymentUtils.getStatus(emp.productivityScore, emp.level);
+    final emp = _employee;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,6 +64,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed: () {
               setState(() {
                 _isEditing = !_isEditing;
+                setValues();
               });
             },
           )
@@ -59,67 +72,105 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: EmSizes.lg),
-        child: ListView(
-          children: [
-            _buildReadOnly("Full Name", "${emp.firstName} ${emp.lastName}"),
-            _buildReadOnly("Designation", emp.designation),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              _buildReadOnly("Full Name", "${emp.firstName} ${emp.lastName}"),
+              _buildReadOnly("Designation", emp.designation),
 
-            _isEditing
-                ? _buildLevelPicker()
-                : _buildReadOnly("Level", "$_level"),
+              _isEditing
+                  ? _buildLevelPicker()
+                  : _buildReadOnly("Level", "$_level"),
 
-            _isEditing
-                ? _buildEditable(
-              "Productivity Score",
-              _scoreController,
-              TextInputType.number,
-              (value) {
-                final score = double.tryParse(value ?? '');
-                if (score == null || score < 0 || score > 100) {
-                  return 'Score must be between 0 and 100';
-                }
-                return '';
-              },
-            )
-                :
-            _buildReadOnly("Productivity Score", emp.productivityScore.toString()),
-
-            _buildReadOnly("Current Salary", "₦${emp.currentSalary}"),
-            const Divider(height: 32),
-            _buildReadOnly("New Status", status),
-            _buildReadOnly("New Salary", newSalary),
-            const SizedBox(height: 24),
-
-            if (_isEditing)
-              ElevatedButton.icon(
-                icon: const Icon(Icons.save),
-                label: const Text("Save Changes"),
-                onPressed: () async {
-                  final emProvider = Provider.of<EmployeeProvider>(context, listen: false);
-                  final updated = widget.employee.copyWith(
-                    productivityScore: double.parse(_scoreController.text),
-                    level: _level,
-                  );
-
-                  try {
-                    await emProvider.saveChanges(updated);
-
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Changes saved!")),
-                      );
-                      setState(() {
-                        _isEditing = false;
-                      });
-                    }
-                  } catch (e) {
-                    if (kDebugMode) {
-                      print(e);
-                    }
+              _isEditing
+                  ? _buildEditable(
+                "Productivity Score",
+                _scoreController,
+                TextInputType.number,
+                (value) {
+                  final score = double.tryParse(value ?? '');
+                  if (score == null || score < 0 || score > 100) {
+                    return 'Score must be between 0 and 100';
                   }
+                  return null;
                 },
+                (value) {
+                  setState(() {
+                    value?.isNotEmpty == true ? status = EmploymentUtils.getStatus(double.parse(_scoreController.text), _level) : status = status;
+                    print(status);
+                  });
+                }
               )
-          ],
+                  :
+              _buildReadOnly("Productivity Score", emp.productivityScore.toString()),
+
+              _isEditing
+                  ? _buildEditable(
+                "Salary",
+                _salaryController,
+                TextInputType.number,
+                    (value) {
+                  final salary = double.tryParse(value ?? '');
+                  if (salary == null || salary < 70000 || salary > 250000) {
+                    return 'Salary must be between 70,000 and 250,000';
+                  }
+                  return null;
+                },
+                  (value){}
+              )
+                  :
+              _buildReadOnly("Current Salary", "₦${emp.currentSalary}"),
+              const Divider(height: 32),
+              _buildReadOnly("New Status", status),
+              _buildReadOnly("New Salary", newSalary),
+
+              const SizedBox(height: 24),
+
+              if (_isEditing)
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save Changes"),
+                  onPressed: () async {
+                    if(_formKey.currentState?.validate() ?? false) {
+                      final emProvider = Provider.of<EmployeeProvider>(context, listen: false);
+                      final updated = _employee.copyWith(
+                          productivityScore: double.parse(_scoreController.text),
+                          level: _level,
+                          currentSalary: EmploymentUtils.formatCurrency(int.parse(_salaryController.text))
+                      );
+
+                      try {
+                        await emProvider.saveChanges(updated);
+
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Changes saved!")),
+                          );
+                          setState(() {
+                            _isEditing = false;
+
+                            _employee = updated;
+
+                            _scoreController.text = updated.productivityScore.toString();
+                            _salaryController.text = updated.currentSalary.replaceAll(',', '');
+                            _level = _employee.level;
+                          });
+                        }
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print(e);
+                        }
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please fill in the correct values"), backgroundColor: AppColors.errorColor,),
+                      );
+                    }
+                  },
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -129,6 +180,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
           Expanded(child: Text(value)),
@@ -137,15 +189,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildEditable(String label, TextEditingController controller, TextInputType inputType, String Function(String?)? validator) {
+  Widget _buildEditable(String label, TextEditingController controller, TextInputType inputType, String? Function(String?)? validator, Function(String?)? onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: CustomTextField(
+        key: Key(label),
         controller: controller,
-        hintText: 'productivity score 0-100',
+        hintText: 'Enter $label',
         labelText: label,
         keyboardType: inputType,
         validator: validator,
+        onChanged: onChanged,
       ),
     );
   }
@@ -170,7 +224,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onChanged: (val) {
               setState(() {
                 _level = val!;
-                newSalary = EmploymentUtils.getNewSalary(_level, widget.employee.productivityScore);
+                newSalary = EmploymentUtils.getNewSalary(_level, _employee.productivityScore);
               });
             },
           )

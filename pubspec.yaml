@@ -16,6 +16,8 @@ dependencies:
   path_provider_android: ^2.2.17
   provider: ^6.1.5
   sqflite: ^2.3.2
+  device_preview: ^1.2.0
+  intl:
 
 dev_dependencies:
   flutter_test:

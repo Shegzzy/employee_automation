@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class EmploymentUtils {
   static String getStatus(double score, int level) {
     if (score >= 80) return "A promotion and consequential pay increase";
@@ -45,5 +47,10 @@ class EmploymentUtils {
     }
 
     return salary;
+  }
+
+  static String formatCurrency(int amount) {
+    final formatter = NumberFormat('#,###');
+    return formatter.format(amount);
   }
 }

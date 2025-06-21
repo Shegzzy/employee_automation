@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextInputType? keyboardType;
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
   final Function(String?)? onChanged;
   final String? initialValue;
   final bool isDisabled;
@@ -47,7 +47,7 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
               key: textFieldKey,
-              autovalidateMode: AutovalidateMode.always,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: controller,
               enabled: !isDisabled,
               obscureText: isPassword,
