@@ -18,6 +18,7 @@ dependencies:
   sqflite: ^2.3.2
   device_preview: ^1.2.0
   intl:
+  go_router:
 
 dev_dependencies:
   flutter_test:

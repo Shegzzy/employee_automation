@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     emProvider.loadEmployees(simulateError: true);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: AppColors.errorColor,
                     foregroundColor: Colors.white,
                   ),
                 ),
